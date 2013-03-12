@@ -27,6 +27,28 @@ class Admin::ContentController < Admin::BaseController
     new_or_edit
   end
 
+  def merge
+    unless current_user.admin?
+      redirect_to :action => 'edit'
+      flash[:error] = ("Error, only admin may merge articles!")
+      return
+    end
+    unless params[:id].nil?
+      redirect_to :action => 'edit'
+      flash[:error] = _("Error, can't merge a new article!")
+      return
+    end
+    #@article = Article.new
+    @article = Article.find(params[:id]).merge_with(params[:merge_with])
+    if @article.nil?
+      redirect_to :action => 'index'
+      flash[:error] = _("Error, failed to merge to article with provided id!")
+      return
+    end
+    flash[:notice] = _("Successfully merged!")
+    return @article
+  end
+  
   def edit
     @article = Article.find(params[:id])
     unless @article.access_by? current_user

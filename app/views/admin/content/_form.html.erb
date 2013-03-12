@@ -146,7 +146,15 @@
     <ul id='attachments' class='inputs-list'>
       <%= render 'admin/content/attachment', { :attachment_num => 1, :hidden => false } -%>
     </ul>
-  </div>    
+  </div>
+  
+  <% if current_user.admin? and !@article.id.nil?%>
+    <div class=''>  
+      <h4><%= _("Merge Articles") %></h4>
+      <%= label_tag :merge_with, 'Article ID' %><%= text_field_tag :merge_with, nil, :size => 20 %>
+      <%= button_to 'Merge', admin_content_merge_path(:id => @article.id) %>
+    </div>
+  <%end%>
   </div>
 
 </div>

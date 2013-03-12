@@ -12,6 +12,28 @@ class Article < Content
 
   validates_uniqueness_of :guid
   validates_presence_of :title
+  
+  before_destroy :reload_associated_comments
+  
+  def reload_associated_comments
+    if !self.comments.empty?
+      article = Article.find(@merge_with)
+      article.comments << self.comments
+      article.save
+    end
+  end
+  
+  def merge_with(id)
+    @merge_with = id
+    article = Article.find(@merge_with)
+    if !article.nil?
+      text = article.body
+      text << self.body
+      article.update_attribute(body, text)
+      return article
+    end
+    nil
+  end
 
   belongs_to :user
 
