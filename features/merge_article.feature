@@ -8,6 +8,8 @@ Feature: Merge Articles
     And I am logged into the admin panel
 
   Scenario: A non-admin cannot merge articles
+
+    Given
     Given I am on the new article page
     When I fill in "article_title" with "Foobar"
     And I fill in "article__body_and_extended_editor" with "Lorem Ipsum"

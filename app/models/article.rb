@@ -16,10 +16,22 @@ class Article < Content
   before_destroy :reload_associated_comments
   
   def reload_associated_comments
-    if !self.comments.empty?
+    breakpoint
+    unless self.comments.empty?
       article = Article.find(@merge_with)
-      article.comments << self.comments
-      article.save
+      breakpoint
+      self.comments.each do |comment|
+        breakpoint
+        comment.article = article
+        breakpoint
+        comment.save!
+        breakpoint
+        article.save!
+        breakpoint
+        self.save!
+      end
+      #article.comments << self.comments
+      breakpoint
     end
   end
   
@@ -35,7 +47,9 @@ class Article < Content
       #article.update_attribute(body, text)
       #article.body = text
       #article.save!
-      #breakpoint
+      breakpoint
+      self.destroy
+      breakpoint
       return article
     end
     nil
