@@ -27,9 +27,15 @@ class Article < Content
     @merge_with = id
     article = Article.find(@merge_with)
     if !article.nil?
-      text = article.body
-      text << self.body
-      article.update_attribute(body, text)
+      text = article.body + body
+      article.body = text
+      article.save!
+      #text << self.body
+      #breakpoint
+      #article.update_attribute(body, text)
+      #article.body = text
+      #article.save!
+      #breakpoint
       return article
     end
     nil
