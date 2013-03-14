@@ -30,7 +30,7 @@ class Admin::ContentController < Admin::BaseController
   def merge
     unless current_user.admin?
       redirect_to "/admin/content/edit/#{params[:id]}"
-      flash[:error] = ("Error, only admin may merge articles!")
+      flash[:error] = _("Error, only admin may merge articles!")
       return
     end
     if params[:id].nil?
@@ -41,7 +41,7 @@ class Admin::ContentController < Admin::BaseController
     #@article = Article.new
     @article = Article.find(params[:id]).merge_with(params[:merge_with])
     if @article.nil?
-      
+      redirect_to "/admin/content/edit/#{params[:id]}"
       flash[:error] = _("Error, failed to merge to article with provided id!")
       return
     end

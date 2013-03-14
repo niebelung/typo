@@ -5,24 +5,26 @@ Feature: Merge Articles
 
   Background:
     Given the following articles exist:
-  | title                   | body                           |
-  | Hello World!            | This is Hello World article!   | 
-  | Goodbye World!          | This is Goodbye World article! |
+  | title                   | body                           | author |
+  | Hello World!            | Welcome to Typo. This is your first article. Edit or delete it, then start blogging!   | Mr Typo  |
+  | Salut World!            | This is Salut World article!   | vasja  |
+  | Goodbye World!          | This is Goodbye World article! | petja  |
 
-    Given the blog is set up
 
   Scenario: A non-admin cannot merge articles
+    Given the blog is set up for vasja
+    Given I am logged into the vasja panel
+    Given I am on the edit page for "Salut World!"
+    Then I should not see "Merge Articles"
 
-    Given 
-    Given I am on the new article page
-    When I fill in "article_title" with "Foobar"
-    And I fill in "article__body_and_extended_editor" with "Lorem Ipsum"
-    And I press "Publish"
-    Then I should be on the admin content page
-    When I go to the home page
-    Then I should see "Foobar"
-    When I follow "Foobar"
-    Then I should see "Lorem Ipsum"
-
-  Scenario: Articles should contain text of both articles
+  Scenario: When articles are merged, the merged article should contain the text of both previous articles
+    Given the blog is set up
     Given I am logged into the admin panel
+    Given I am on the edit page for "Salut World!"
+    When I fill in "merge_with" with id of "Goodbye World!"
+    And press "Merge"
+    Then I should be on the edit page for "Goodbye World!"
+    And I should see "This is Salut World article!"
+    And I should see "This is Goodbye World article!"
+
+    

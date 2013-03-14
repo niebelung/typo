@@ -50,14 +50,27 @@ Given /^the blog is set up for (.*)$/ do |username|
   User.create!({:login => "#{username}",
                 :password => 'aaaaaaaa',
                 :email => 'joe@snow.com',
-                :profile_id => 1,
-                :name => 'admin',
+                :profile_id => 2,
+                :name => "#{username}",
                 :state => 'active'})
 end
 
-And /^I am logged into the admin panel$/ do
+#And /^I am logged into the admin panel$/ do
+#  visit '/accounts/login'
+#  fill_in 'user_login', :with => 'admin'
+#  fill_in 'user_password', :with => 'aaaaaaaa'
+#  click_button 'Login'
+#  if page.respond_to? :should
+#    page.should have_content('Login successful')
+#  else
+#    assert page.has_content?('Login successful')
+#  end
+#end
+
+# Single-line step scoper
+And /^I am logged into the (.*) panel$/ do |login|
   visit '/accounts/login'
-  fill_in 'user_login', :with => 'admin'
+  fill_in 'user_login', :with => "#{login}"
   fill_in 'user_password', :with => 'aaaaaaaa'
   click_button 'Login'
   if page.respond_to? :should
@@ -95,6 +108,10 @@ end
 
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
   fill_in(field, :with => value)
+end
+
+When /^(?:|I )fill in "([^"]*)" with id of "([^"]*)"$/ do |field, value|
+  fill_in(field, :with => Article.find_by_title("#{value}").id)
 end
 
 When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
@@ -287,4 +304,13 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+Given /the following articles exist/ do |articles_table|
+  articles_table.hashes.each do |article|
+    # each returned element will be a hash whose key is the table header.
+    # you should arrange to add that movie to the database here.
+    Article.create!(article)
+  end
+  #flunk "Unimplemented"
 end
