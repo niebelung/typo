@@ -4,12 +4,16 @@ Feature: Merge Articles
   I want to be able to merge articles in my blog
 
   Background:
+    Given the following articles exist:
+  | title                   | body                           |
+  | Hello World!            | This is Hello World article!   | 
+  | Goodbye World!          | This is Goodbye World article! |
+
     Given the blog is set up
-    And I am logged into the admin panel
 
   Scenario: A non-admin cannot merge articles
 
-    Given
+    Given 
     Given I am on the new article page
     When I fill in "article_title" with "Foobar"
     And I fill in "article__body_and_extended_editor" with "Lorem Ipsum"
@@ -19,3 +23,6 @@ Feature: Merge Articles
     Then I should see "Foobar"
     When I follow "Foobar"
     Then I should see "Lorem Ipsum"
+
+  Scenario: Articles should contain text of both articles
+    Given I am logged into the admin panel

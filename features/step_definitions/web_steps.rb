@@ -43,6 +43,18 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
 end
 
+Given /^the blog is set up for (.*)$/ do |username|
+  Blog.default.update_attributes!({:blog_name => 'Teh Blag',
+                                   :base_url => 'http://localhost:3000'});
+  Blog.default.save!
+  User.create!({:login => "#{username}",
+                :password => 'aaaaaaaa',
+                :email => 'joe@snow.com',
+                :profile_id => 1,
+                :name => 'admin',
+                :state => 'active'})
+end
+
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'

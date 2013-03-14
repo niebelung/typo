@@ -13,43 +13,26 @@ class Article < Content
   validates_uniqueness_of :guid
   validates_presence_of :title
   
-  before_destroy :reload_associated_comments
-  
   def reload_associated_comments
-    breakpoint
     unless self.comments.empty?
       article = Article.find(@merge_with)
-      breakpoint
       self.comments.each do |comment|
-        breakpoint
         comment.article = article
-        breakpoint
         comment.save!
-        breakpoint
-        article.save!
-        breakpoint
-        self.save!
       end
-      #article.comments << self.comments
-      breakpoint
     end
   end
   
   def merge_with(id)
     @merge_with = id
     article = Article.find(@merge_with)
-    if !article.nil?
+    unless article.nil?
       text = article.body + body
       article.body = text
       article.save!
-      #text << self.body
-      #breakpoint
-      #article.update_attribute(body, text)
-      #article.body = text
-      #article.save!
-      breakpoint
+      reload_associated_comments
+      self.reload
       self.destroy
-      breakpoint
       return article
     end
     nil
