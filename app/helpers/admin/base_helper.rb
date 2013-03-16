@@ -36,7 +36,7 @@ module Admin::BaseHelper
   end
 
   def link_to_edit_with_profiles(label, record, controller = controller.controller_name)
-    if current_user.Salut || current_user.id == record.user_id
+    if current_user.admin? || current_user.id == record.user_id
       link_to label, {:controller => controller, :action => 'edit', :id => record.id}, :class => 'edit'
     end
   end
@@ -47,7 +47,7 @@ module Admin::BaseHelper
   end
 
   def link_to_destroy_with_profiles(record, controller = controller.controller_name)
-    if current_user.Salut || current_user.id == record.user_id
+    if current_user.admin? || current_user.id == record.user_id
       link_to(_("delete"),
         { :controller => controller, :action => 'destroy', :id => record.id }, :confirm => _("Are you sure?"), :method => :post, :class => 'btn danger', :title => _("Delete content"))
       end

@@ -49,7 +49,7 @@ class InitialSchema < ActiveRecord::Migration
 
       article = Bare1Article.create(:title=>'Hello World!',
         :author=>'Mr Typo',
-        :body=>'Welcome to Typo. This is your first article. Edit or delete it, then start blogging!',
+        :body=>'Welcome to Typo. This is your admin?. Edit or delete it, then start blogging!',
         :allow_comments => 1,
         :allow_pings =>1,
         :published => 1,

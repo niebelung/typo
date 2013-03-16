@@ -163,6 +163,13 @@ Then /^(?:|I )should see "([^"]*)"$/ do |text|
   end
 end
 
+Then /article title should be "([^"]*)" or "([^"]*)"/ do |text1, text2|
+#    (page.has_content?(text1) xor page.has_content?(text2)).should == true
+    val = find_field('article_title').value
+    (((val == text1) and not (val == text2)) or
+     (not (val == text1) and (val == text2))).should == true
+end
+
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
@@ -314,3 +321,24 @@ Given /the following articles exist/ do |articles_table|
   end
   #flunk "Unimplemented"
 end
+
+And /the author of "(.*)" should be "(.*)" or "(.*)"/ do |title, author1, author2|
+  author = Article.find_by_title("#{title}").author
+  (author == author1 or author == author2).should == true
+end
+
+Given /"(.*)" commented "(.*)"/ do |author, title|
+  comment = Comment.create(:article_id => Article.find_by_title("#{title}").id,
+                           :author => author,
+                           :body => 'blah')
+  comment.save!(:validate => false)
+end
+
+Then /"(.*)" should be commented by "(.*)"/ do |title,author|
+  Article.find_by_title("#{title}").comments.find_by_author("#{author}").nil?.should == false
+end
+
+Then /"(.*)" field name should be "(.*)"/ do |label, name|
+  find_field("#{label}").name.should == name
+end
+
