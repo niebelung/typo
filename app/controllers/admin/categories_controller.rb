@@ -6,7 +6,7 @@ class Admin::CategoriesController < Admin::BaseController
 
   def new 
     respond_to do |format|
-      format.html { new_or_edit }
+       format.html { new_or_edit }
       format.js { 
         @category = Category.new
       }
@@ -25,8 +25,12 @@ class Admin::CategoriesController < Admin::BaseController
 
   def new_or_edit
     @categories = Category.find(:all)
-    @category = Category.find(params[:id])
-    @category.attributes = params[:category]
+    
+    @category = (params[:id].nil?) ? Category.new() : Category.find(params[:id])
+    @category.attributes = params[:category] 
+#   else
+#     @category.attributes = (params[:category].nil?) ? {:name => 'New category'} : params[:category] 
+    #end
     if request.post?
       respond_to do |format|
         format.html { save_category }
@@ -48,7 +52,8 @@ class Admin::CategoriesController < Admin::BaseController
     else
       flash[:error] = _('Category could not be saved.')
     end
-    redirect_to :action => 'new'
+    #@category.reload
+    redirect_to :action => 'edit', :id => @category.id
   end
 
 end
