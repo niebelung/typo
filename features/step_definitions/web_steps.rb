@@ -322,6 +322,15 @@ Given /the following articles exist/ do |articles_table|
   #flunk "Unimplemented"
 end
 
+Given /the following categories exist/ do |categories_table|
+  categories_table.hashes.each do |category|
+    # each returned element will be a hash whose key is the table header.
+    # you should arrange to add that movie to the database here.
+    Category.create!(category)
+  end
+  #flunk "Unimplemented"
+end
+
 And /the author of "(.*)" should be "(.*)" or "(.*)"/ do |title, author1, author2|
   author = Article.find_by_title("#{title}").author
   (author == author1 or author == author2).should == true
